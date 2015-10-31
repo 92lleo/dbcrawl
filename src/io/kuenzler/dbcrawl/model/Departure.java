@@ -1,12 +1,11 @@
+package io.kuenzler.dbcrawl.model;
+
 import java.util.Date;
 
 /**
- * 
- */
-
-/**
- * @author Leonhard
- *
+ * @author Leonhard Künzler
+ * @version 0.1
+ * @date 15.10.31 23:00
  */
 public class Departure {
 
@@ -14,15 +13,28 @@ public class Departure {
 			duration;
 	Date date;
 
+	/**
+	 * 
+	 */
 	public Departure() {
-		// TODO konstruktor evtl
+		// TODO something here?
 	}
 
+	/**
+	 * 
+	 * @param start
+	 * @param dest
+	 */
 	public void setTimes(String start, String dest) {
 		timeStart = start;
 		timeDestination = dest;
 	}
 
+	/**
+	 * 
+	 * @param start
+	 * @param dest
+	 */
 	public void setLocations(String start, String dest) {
 		locStart = start;
 		locDestination = dest;
@@ -154,5 +166,4 @@ public class Departure {
 				+ "), " + timeStart + "-" + timeDestination + " (" + duration
 				+ "). Delay: " + delay;
 	}
-
 }

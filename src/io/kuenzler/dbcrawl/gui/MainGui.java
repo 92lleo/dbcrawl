@@ -1,3 +1,7 @@
+package io.kuenzler.dbcrawl.gui;
+
+import io.kuenzler.dbcrawl.control.Crawler;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,15 +15,16 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 /**
- * 
- */
-
-/**
- * @author Leonhard
- *
+ * @author Leonhard Künzler
+ * @version 0.1
+ * @date 15.10.31 23:00
  */
 public class MainGui extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7085376948951446720L;
 	private JPanel contentPane;
 	private JTextField t_start;
 	private JTextField t_dest;
@@ -33,7 +38,10 @@ public class MainGui extends JFrame {
 	private JTextField t_status;
 
 	/**
-	 * Create the frame.
+	 * Creates test gui
+	 * 
+	 * @param main
+	 *            Crawler for connection
 	 */
 	public MainGui(Crawler main) {
 		setTitle("SBahn Crawl");
@@ -76,7 +84,7 @@ public class MainGui extends JFrame {
 		});
 		b_check.setBounds(98, 84, 89, 23);
 		contentPane.add(b_check);
-		
+
 		btnNewButton = new JButton("Exit");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -85,7 +93,7 @@ public class MainGui extends JFrame {
 		});
 		btnNewButton.setBounds(335, 84, 89, 23);
 		contentPane.add(btnNewButton);
-		
+
 		t_status = new JTextField();
 		t_status.setEditable(false);
 		t_status.setBounds(10, 230, 414, 20);
@@ -94,13 +102,23 @@ public class MainGui extends JFrame {
 
 		setVisible(true);
 	}
-	
-	public void setUpdate(String update){
+
+	/**
+	 * Set update String to status line
+	 * 
+	 * @param update
+	 *            Update String
+	 */
+	public void setUpdate(String update) {
 		t_status.setText(update.trim());
 	}
 
+	/**
+	 * triggers data update from crawler and set result to gui
+	 */
 	public void refreshData() {
-		ArrayList<String> data = main.crawlData(t_dest.getText(), t_start.getText());
+		ArrayList<String> data = main.crawlData(t_dest.getText(),
+				t_start.getText());
 		String info = "";
 		for (String x : data) {
 			info += x + "\n";

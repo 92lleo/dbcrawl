@@ -1,3 +1,7 @@
+package io.kuenzler.dbcrawl.control;
+
+import io.kuenzler.dbcrawl.model.Departure;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +18,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+/**
+ * @author Leonhard Künzler
+ * @version 0.2
+ * @date 15.10.31 23:00
+ */
 public class newCrawler {
 
 	private final String mBahnUrl;
@@ -21,12 +30,14 @@ public class newCrawler {
 	private String date, time, start, dest;
 	private ArrayList<Departure> departures;
 
+	/**
+	 * 
+	 */
 	public newCrawler() {
 		mBahnUrl = "http://mobile.bahn.de/bin/mobil/query.exe/dox?country=DEU&rt=1&use_realtime_filter=1&webview=&searchMode=NORMAL";
 		setTestData();
 		sendRequest();
 		cleanAndParseResults();
-		// test();
 		for (Departure d : departures) {
 			System.out.println(d);
 		}
@@ -136,6 +147,7 @@ public class newCrawler {
 	 * Creates new Crawler (jsoup alternative)
 	 * 
 	 * @param args
+	 *            not used
 	 */
 	public static void main(String args[]) {
 		new newCrawler();

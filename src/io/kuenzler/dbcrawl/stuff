@@ -1,3 +1,5 @@
+//just to save some stuff
+
 ite = table.select("tr").iterator();
 			Element delay = table.getElementsByClass("okmsg").first();
 

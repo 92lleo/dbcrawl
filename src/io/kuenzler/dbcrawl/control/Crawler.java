@@ -1,6 +1,7 @@
-/**
- * 
- */
+package io.kuenzler.dbcrawl.control;
+
+import io.kuenzler.dbcrawl.gui.MainGui;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,19 +20,29 @@ import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 
+/**
+ * @author Leonhard Künzler
+ * @version 0.1
+ * @date 15.10.31 23:00
+ */
 public class Crawler {
 
 	MainGui frame;
 
-	public static void main(String[] args) throws Exception {
-		new Crawler();
-	}
-
+	/**
+	 * 
+	 */
 	public Crawler() {
 		frame = new MainGui(this);
 		// frame.refreshData();
 	}
 
+	/**
+	 * 
+	 * @param destination
+	 * @param start
+	 * @return
+	 */
 	public ArrayList<String> crawlData(String destination, String start) {
 
 		// start = "Eching";
@@ -47,7 +58,6 @@ public class Crawler {
 
 		});
 
-		// visit Yahoo Mail login page and get the Form object
 		String url = "http://mobile.bahn.de/bin/mobil/query.exe/dox?country=DEU&rt=1&use_realtime_filter=1&webview=&searchMode=NORMAL";
 		HtmlPage page;
 		try {
@@ -83,8 +93,8 @@ public class Crawler {
 				current = replace(current);
 				breaks = current.split(" ");
 				information += breaks[0] + ", ";
-				if (breaks[0].startsWith("ca")){
-					information += " "+breaks[1];
+				if (breaks[0].startsWith("ca")) {
+					information += " " + breaks[1];
 				}
 
 				// next
@@ -115,6 +125,11 @@ public class Crawler {
 		}
 	}
 
+	/**
+	 * 
+	 * @param s
+	 * @return
+	 */
 	public String replace(String s) {
 		String reg = " ";
 		s = s.replace("\n", reg);
@@ -126,6 +141,10 @@ public class Crawler {
 		return s;
 	}
 
+	/**
+	 * 
+	 * @param update
+	 */
 	private void setUpdate(String update) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -134,11 +153,27 @@ public class Crawler {
 		});
 	}
 
+	/**
+	 * 
+	 * @param array
+	 */
 	public void printArray(String[] array) {
 		System.out.println("--------");
 		for (String x : array) {
 			System.out.println("newline" + x);
 		}
 		System.out.println("--------");
+	}
+
+	/**
+	 * Creates new Crawler (htmlunit alternative)
+	 * 
+	 * @param args
+	 *            not used
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		// TODO handle exception above
+		new Crawler();
 	}
 }
