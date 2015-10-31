@@ -1,6 +1,7 @@
 DBCrawl
 ===========
 
-Api for db departures
-crawler: gets data using htmlunit
-newcrawler: gets data using jsoup (better code & usable on android, too)
+Api for db departures.
+
+control/crawler: gets data using htmlunit.
+control/newcrawler: gets data using jsoup (better code & usable on android, too).
