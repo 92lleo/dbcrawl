@@ -8,14 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 /**
@@ -38,8 +36,10 @@ public class newCrawler {
 		setTestData();
 		sendRequest();
 		cleanAndParseResults();
-		for (Departure d : departures) {
-			System.out.println(d);
+		if (!departures.isEmpty()) {
+			for (Departure d : departures) {
+				System.out.println(d);
+			}
 		}
 	}
 
@@ -53,10 +53,62 @@ public class newCrawler {
 		date = formatter.format(today);
 		SimpleDateFormat ft = new SimpleDateFormat("HH:mm", Locale.GERMANY);
 		time = ft.format(today);
-		start = "Feldmoching";
+		start = "München WEstkrz";
 		dest = "Eching";
 
 		System.out.println(date + "-" + time + ", " + start + " to " + dest);
+	}
+
+	private void cleanAndParseAlternativeLocations() {
+		if (!mBahn.title().contains("Ihre Anfrage")) {
+			throw new NoSuchElementException(
+					"Did expect drop down dialog, found site " + mBahn.title());
+		}
+
+		// get alternatives for start (REQ0JourneyStopsS0K)
+		Elements alternatives = mBahn.getElementsByAttributeValue("name",
+				"REQ0JourneyStopsS0K");
+		alternatives = alternatives.first().children();
+		ArrayList<String> alternativeLocations = new ArrayList<String>();
+		System.out.println("--Alternatives to " + start); // TODO
+		for (Element x : alternatives) {
+			System.out.println(x.text()); // TODO
+			alternativeLocations.add(x.text());
+		}
+		if(!alternativeLocations.isEmpty()){
+			start = getBestAlternative(start, alternativeLocations);
+			System.out.println("Start set to "+start);
+		}
+
+		// get alternatives for start (REQ0JourneyStopsZ0K)
+		alternatives = mBahn.getElementsByAttributeValue("name",
+				"REQ0JourneyStopsZ0K");
+		alternatives = alternatives.first().children();
+		alternativeLocations = new ArrayList<String>();
+		System.out.println("--Alternatives to " + dest); // TODO
+		for (Element x : alternatives) {
+			System.out.println(x.text());
+			alternativeLocations.add(x.text());
+		}
+		if(!alternativeLocations.isEmpty()){
+			dest = getBestAlternative(start, alternativeLocations);
+			System.out.println("Dest set to "+dest);
+		}
+	}
+
+	private String getBestAlternative(String location,
+			ArrayList<String> alternatives) {
+		double currentDistance, distance = 0;
+		String result = "";
+		for (String s : alternatives) {
+			currentDistance = StringSimilarity
+					.getSimilarityPercent(location, s);
+			if (currentDistance > distance) {
+				distance = currentDistance;
+				result = s;
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -64,7 +116,16 @@ public class newCrawler {
 	 */
 	private void cleanAndParseResults() {
 		if (!mBahn.title().contains("Ihre Auskunft")) {
-			throw new NoSuchElementException("No results to parse");
+			// TODO parse alternatives and response/pick first/search for best
+			// example for "Westkreuz München"
+			// <select name="REQ0JourneyStopsS0K" class="nofullwidth">
+			// <option value="S1-0N1">München-Westkreuz </option>
+			// <option value="S1-0N2">Westkreuz, München </option>
+			// </select>
+			// set site to doc and call @
+			cleanAndParseAlternativeLocations();
+			sendRequest();
+			// throw new NoSuchElementException("No right results to parse");
 		}
 		mBahn.getElementsByClass("ovTable clicktable");
 		// get departures table and split into elemets
