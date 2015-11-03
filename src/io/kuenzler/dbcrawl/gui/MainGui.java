@@ -21,9 +21,6 @@ import javax.swing.border.EmptyBorder;
  */
 public class MainGui extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7085376948951446720L;
 	private JPanel contentPane;
 	private JTextField t_start;

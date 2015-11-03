@@ -19,7 +19,7 @@ import org.jsoup.select.Elements;
 /**
  * @author Leonhard Künzler
  * @version 0.2
- * @date 15.10.31 23:00
+ * @date 15.11.03 01:00
  */
 public class newCrawler {
 
@@ -33,7 +33,8 @@ public class newCrawler {
 	 */
 	public newCrawler() {
 		mBahnUrl = "http://mobile.bahn.de/bin/mobil/query.exe/dox?country=DEU&rt=1&use_realtime_filter=1&webview=&searchMode=NORMAL";
-		setTestData();
+		setTestData(); // TODO delete when working with gui (getter & setter
+						// needed)
 		sendRequest();
 		cleanAndParseResults();
 		if (!departures.isEmpty()) {
@@ -44,7 +45,7 @@ public class newCrawler {
 	}
 
 	/**
-	 * Testdata
+	 * Testdata for use without gui
 	 */
 	private void setTestData() {
 		Date today = new Date();
@@ -59,6 +60,10 @@ public class newCrawler {
 		System.out.println(date + "-" + time + ", " + start + " to " + dest);
 	}
 
+	/**
+	 * Cleans results and parses alternative start and dest locations, sets them
+	 * when possible
+	 */
 	private void cleanAndParseAlternativeLocations() {
 		if (!mBahn.title().contains("Ihre Anfrage")) {
 			throw new NoSuchElementException(
@@ -75,9 +80,9 @@ public class newCrawler {
 			System.out.println(x.text()); // TODO
 			alternativeLocations.add(x.text());
 		}
-		if(!alternativeLocations.isEmpty()){
+		if (!alternativeLocations.isEmpty()) {
 			start = getBestAlternative(start, alternativeLocations);
-			System.out.println("Start set to "+start);
+			System.out.println("Start set to " + start);
 		}
 
 		// get alternatives for start (REQ0JourneyStopsZ0K)
@@ -90,12 +95,21 @@ public class newCrawler {
 			System.out.println(x.text());
 			alternativeLocations.add(x.text());
 		}
-		if(!alternativeLocations.isEmpty()){
+		if (!alternativeLocations.isEmpty()) {
 			dest = getBestAlternative(start, alternativeLocations);
-			System.out.println("Dest set to "+dest);
+			System.out.println("Dest set to " + dest);
 		}
 	}
 
+	/**
+	 * Returns String with highest similarity to location string
+	 * 
+	 * @param location
+	 *            Location string
+	 * @param alternatives
+	 *            Alternative strings from db site
+	 * @return best matching string from array
+	 */
 	private String getBestAlternative(String location,
 			ArrayList<String> alternatives) {
 		double currentDistance, distance = 0;
@@ -112,17 +126,11 @@ public class newCrawler {
 	}
 
 	/**
-	 * 
+	 * Cleans the document and parses departures. Expects Query to be sent.
+	 * Triggers search for alternative locations if unsuccessful
 	 */
 	private void cleanAndParseResults() {
 		if (!mBahn.title().contains("Ihre Auskunft")) {
-			// TODO parse alternatives and response/pick first/search for best
-			// example for "Westkreuz München"
-			// <select name="REQ0JourneyStopsS0K" class="nofullwidth">
-			// <option value="S1-0N1">München-Westkreuz </option>
-			// <option value="S1-0N2">Westkreuz, München </option>
-			// </select>
-			// set site to doc and call @
 			cleanAndParseAlternativeLocations();
 			sendRequest();
 			// throw new NoSuchElementException("No right results to parse");
