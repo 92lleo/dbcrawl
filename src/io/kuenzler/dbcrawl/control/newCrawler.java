@@ -41,6 +41,8 @@ public class newCrawler {
 			for (Departure d : departures) {
 				System.out.println(d);
 			}
+			DateCalculator dc = new DateCalculator();
+			dc.countToDeparture(departures.get(0));
 		}
 	}
 

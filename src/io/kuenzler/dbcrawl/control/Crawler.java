@@ -77,10 +77,9 @@ public class Crawler {
 			for (HtmlTableRow row : table.getRows()) {
 				System.out.print("\n");
 				List<HtmlTableCell> cells = row.getCells();
-				int cellCount, cellCurrent;
+				int cellCurrent;
 				String information, current;
 				String[] breaks;
-				cellCount = cells.size();
 				cellCurrent = 0;
 				information = "";
 				current = cells.get(cellCurrent).asText();
@@ -111,6 +110,7 @@ public class Crawler {
 				times.add(information);
 			}
 			setUpdate("Done");
+			webClient.close();
 			return times;
 		} catch (IndexOutOfBoundsException e) {
 			ArrayList<String> res = new ArrayList<String>();
